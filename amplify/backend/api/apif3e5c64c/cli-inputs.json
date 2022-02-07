@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "paths": {
+    "/merge": {
+      "name": "/merge",
+      "lambdaFunction": "chinapfm223c62ca",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "read"
+        ],
+        "guest": [
+          "read"
+        ]
+      }
+    }
+  }
+}
