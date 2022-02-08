@@ -1,29 +1,31 @@
-<head>
-  <title>China Personal Financial Management Tool</title>
-</head>
-<body>
-  <h1>China Personal Financial Management Tool</h1>
-  <p>
-    Upload your WeChat Pay, Alipay and Chinese bank transactions here to clean
-    and merge them
-  </p>
-  <form
-    method="post"
-    enctype="multipart/form-data"
-    action="https://tr8i80hm16.execute-api.ap-southeast-1.amazonaws.com/staging/merge"
-  >
-    <div>
-      <label for="wechat_upload">Upload WeChat transactions</label>
-      <input type="file" id="wechat_upload" accept=".csv,.xlsx" />
-    </div>
-    <div>
-      <label for="wechat_upload">Upload Alipay transactions</label>
-      <input type="file" id="alipay_upload" accept=".csv,.xlsx" />
-    </div>
-    <div>
-      <label for="wechat_upload">Upload bank transactions</label>
-      <input type="file" id="bank_upload" accept=".csv,.xlsx" />
-    </div>
-    <button type="submit">Submit</button>
-  </form>
-</body>
+<html>
+  <head>
+    <title>China Personal Financial Management Tool</title>
+  </head>
+  <body>
+    <h1>China Personal Financial Management Tool</h1>
+    <p>
+      Upload your WeChat Pay, Alipay and Chinese bank transactions here to clean
+      and merge them
+    </p>
+    <form
+      method="post"
+      enctype="multipart/form-data"
+      action="https://tr8i80hm16.execute-api.ap-southeast-1.amazonaws.com/staging/merge"
+    >
+      <div>
+        <label for="wechat_upload">Upload WeChat transactions</label>
+        <input type="file" id="wechat_upload" accept=".csv,.xlsx" />
+      </div>
+      <div>
+        <label for="wechat_upload">Upload Alipay transactions</label>
+        <input type="file" id="alipay_upload" accept=".csv,.xlsx" />
+      </div>
+      <div>
+        <label for="wechat_upload">Upload bank transactions</label>
+        <input type="file" id="bank_upload" accept=".csv,.xlsx" />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

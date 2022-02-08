@@ -4,7 +4,7 @@
   "description": "I will build a simple website that aggregates your WeChat Pay, Alipay and your Chinese bank transactions so you can better understand your spending patterns.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
