@@ -8,22 +8,33 @@
       Upload your WeChat Pay, Alipay and Chinese bank transactions here to clean
       and merge them
     </p>
-    <form
-      method="post"
-      enctype="multipart/form-data"
-      action="https://tr8i80hm16.execute-api.ap-southeast-1.amazonaws.com/staging/merge"
-    >
+    <form method="post" enctype="multipart/form-data" action="/merge">
       <div>
         <label for="wechat_upload">Upload WeChat transactions</label>
-        <input type="file" id="wechat_upload" accept=".csv,.xlsx" />
+        <input
+          type="file"
+          id="wechat_upload"
+          accept=".csv,.xlsx"
+          name="wechat_upload"
+        />
       </div>
       <div>
         <label for="wechat_upload">Upload Alipay transactions</label>
-        <input type="file" id="alipay_upload" accept=".csv,.xlsx" />
+        <input
+          type="file"
+          id="alipay_upload"
+          accept=".csv,.xlsx"
+          name="alipay_upload"
+        />
       </div>
       <div>
         <label for="wechat_upload">Upload bank transactions</label>
-        <input type="file" id="bank_upload" accept=".csv,.xlsx" />
+        <input
+          type="file"
+          id="bank_upload"
+          accept=".csv,.xlsx"
+          name="bank_upload"
+        />
       </div>
       <button type="submit">Submit</button>
     </form>
