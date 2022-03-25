@@ -7,6 +7,8 @@ const { manage_alipay_txns } = require("./parse/alipay");
 
 const app = express();
 
+const PORT = 3000;
+
 const publicDirectory = path.join(__dirname, "../public");
 app.use(express.static(publicDirectory));
 app.use(fileUpload({ debug: false, useTempFiles: true, tempFileDir: "/tmp/" }));
@@ -27,6 +29,6 @@ app.post(
   }
 );
 
-app.listen(3000, () => {
-  console.log("Server is up on port 3000");
+app.listen(PORT, () => {
+  console.log(`Server is up on port ${PORT}`);
 });
