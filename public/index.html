@@ -8,25 +8,7 @@
       Upload your WeChat Pay, Alipay and Chinese bank transactions here to clean
       and merge them
     </p>
-    <form method="post" enctype="multipart/form-data" action="/merge">
-      <div>
-        <label for="wechat_upload">Upload WeChat transactions</label>
-        <input
-          type="file"
-          id="wechat_upload"
-          accept=".csv,.xlsx"
-          name="wechat_upload"
-        />
-      </div>
-      <div>
-        <label for="alipay_upload">Upload Alipay transactions</label>
-        <input
-          type="file"
-          id="alipay_upload"
-          accept=".csv,.xlsx"
-          name="alipay_upload"
-        />
-      </div>
+    <form method="post" enctype="multipart/form-data" action="/bank">
       <div>
         <label for="bank_upload">Upload bank transactions</label>
         <input
@@ -36,7 +18,31 @@
           name="bank_upload"
         />
       </div>
-      <button type="submit">Submit</button>
+      <button type="submit">Submit bank txns</button>
+    </form>
+    <form method="post" enctype="multipart/form-data" action="/alipay">
+      <div>
+        <label for="alipay_upload">Upload Alipay transactions</label>
+        <input
+          type="file"
+          id="alipay_upload"
+          accept=".csv,.xlsx"
+          name="alipay_upload"
+        />
+      </div>
+      <button type="submit">Submit Alipay txns</button>
+    </form>
+    <form method="post" enctype="multipart/form-data" action="/wechat">
+      <div>
+        <label for="wechat_upload">Upload WeChat transactions</label>
+        <input
+          type="file"
+          id="wechat_upload"
+          accept=".csv,.xlsx"
+          name="wechat_upload"
+        />
+      </div>
+      <button type="submit">Submit WeChat txns</button>
     </form>
   </body>
 </html>
