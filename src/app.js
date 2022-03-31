@@ -1,9 +1,9 @@
 const path = require("path");
 const express = require("express");
 const fileUpload = require("express-fileupload");
-const { manage_bank_txns } = require("./parse/bank");
-const { manage_wechat_txns } = require("./parse/wechat");
-const { manage_alipay_txns } = require("./parse/alipay");
+const { manage_bank_txns } = require("./parse/banks/bank");
+const { manage_wechat_txns } = require("./parse/banks/wechat");
+const { manage_alipay_txns } = require("./parse/banks/alipay");
 
 const app = express();
 
