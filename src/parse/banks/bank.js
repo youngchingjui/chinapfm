@@ -10,8 +10,8 @@ const {
   replaceNotesWith摘要,
 } = require("../functions");
 
-const manage_bank_txns = async (bank_upload) => {
-  console.log("manage_bank_txns");
+const parse_bank_txns = async (bank_upload) => {
+  console.log("parse_bank_txns");
   let data;
   try {
     // Read CSV
@@ -28,7 +28,7 @@ const manage_bank_txns = async (bank_upload) => {
       row = updateNotes(row);
       return row;
     });
- 
+
     // TODO: (BIG) Bring in Alipay and WeChat pay txn data to inform notes on bank txns
 
     // Convert back into CSV
@@ -40,4 +40,4 @@ const manage_bank_txns = async (bank_upload) => {
   }
 };
 
-module.exports = { manage_bank_txns };
+module.exports = { parse_bank_txns };

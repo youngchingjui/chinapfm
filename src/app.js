@@ -1,7 +1,7 @@
 const path = require("path");
 const express = require("express");
 const fileUpload = require("express-fileupload");
-const { manage_bank_txns } = require("./parse/banks/bank");
+const { parse_bank_txns } = require("./parse/banks/bank");
 const { manage_wechat_txns } = require("./parse/banks/wechat");
 const { manage_alipay_txns } = require("./parse/banks/alipay");
 
@@ -19,9 +19,12 @@ app.get("", (req, res) => {
 
 app.post("/bank", async (req, res) => {
   try {
-    const { tempFilePath, fileName } = await manage_bank_txns(
+    // Parse bank transactions
+    const { tempFilePath, fileName } = await parse_bank_txns(
       req.files.bank_upload
     );
+
+    // Return cleaned transactions
     res.attachment();
     res.download(tempFilePath, fileName);
   } catch (err) {
