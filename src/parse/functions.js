@@ -193,9 +193,17 @@ const updateNotes = (row) => {
 };
 
 const removeDuplicateNotes = (row) => {
-  // TODO: If text in `payee` and `notes` are the same, remove text in `notes`
+  // If text in `payee` and `notes` are the same, remove text in `notes`
   if (row.payee == row.notes) {
     return { ...row, notes: "" };
+  }
+  return row;
+};
+
+const removeEmptyRows = (row) => {
+  // Checks if date column is empty. If so, remove row
+  if (row.date == "") {
+    return null;
   }
   return row;
 };
@@ -210,4 +218,5 @@ module.exports = {
   updateNotes,
   removeDuplicateNotes,
   replaceNotesWith摘要,
+  removeEmptyRows,
 };

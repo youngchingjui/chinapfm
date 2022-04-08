@@ -8,6 +8,7 @@ const {
   updateNotes,
   removeDuplicateNotes,
   replaceNotesWith摘要,
+  removeEmptyRows,
 } = require("../functions");
 
 const parse_bank_txns = async (bank_upload) => {
@@ -26,6 +27,7 @@ const parse_bank_txns = async (bank_upload) => {
       row = removeDuplicateNotes(row);
       row = replaceNotesWith摘要(row);
       row = updateNotes(row);
+      row = removeEmptyRows(row);
       return row;
     });
 
