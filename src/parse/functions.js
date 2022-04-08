@@ -5,24 +5,22 @@ const { headerMappings } = require("../mappings/header");
 
 const TEMP_FILE_PATH = "./bank_txns.csv";
 const FILE_NAME = "bank_txns.csv";
-
 const HEADER_FIELDS = ["date", "payee", "amount", "notes", "tag"];
 
-const combineOutflowInflow = (result) => {
+const combineOutflowInflow = (row) => {
   console.log("combineOutflowInflow");
   // Combine outflow and inflow into 1 column, called "amount"
-  return result.map((e, i) => {
-    const outflow = parseFloat(e.outflow);
-    const inflow = parseFloat(e.inflow);
-    if (outflow > 0) {
-      e.amount = -outflow;
-    } else if (inflow > 0) {
-      e.amount = inflow;
-    } else {
-      e.amount = 0;
-    }
-    return e;
-  });
+
+  const outflow = parseFloat(row.outflow);
+  const inflow = parseFloat(row.inflow);
+  if (outflow > 0) {
+    row.amount = -outflow;
+  } else if (inflow > 0) {
+    row.amount = inflow;
+  } else {
+    row.amount = 0;
+  }
+  return row;
 };
 
 const mapHeaders = ({ header }) => {
@@ -92,48 +90,47 @@ const saveToFile = (dataCSV) => {
   });
 };
 
-const stripLeadingTags = (data) => {
+const stripLeadingTags = (row) => {
   // Remove "支付宝-" or "财付通-" from `payee` and `notes` columns.
   // Add to new `tags` column
   // Note: Sometimes leading tags appear twice. We remove both
+  // TODO: Remove "消费-" from `payee`, leave it in `notes`
   const zfbTag = "支付宝-";
   const cftTag = "财付通-";
 
-  return data.map((v, i) => {
-    const { payee, notes } = v;
+  const { payee, notes } = row;
 
-    let updatedPayee,
-      updatedNotes = null;
+  let updatedPayee,
+    updatedNotes = null;
 
-    updatedPayee = removeLeadingTag(payee, zfbTag);
-    updatedNotes = removeLeadingTag(notes, zfbTag);
+  updatedPayee = removeLeadingTag(payee, zfbTag);
+  updatedNotes = removeLeadingTag(notes, zfbTag);
 
-    if (updatedPayee || updatedNotes) {
-      const updatedTag = zfbTag.replace("-", "");
-      return {
-        ...v,
-        payee: updatedPayee ?? payee,
-        notes: updatedNotes ?? notes,
-        tag: updatedTag,
-      };
-    }
+  if (updatedPayee || updatedNotes) {
+    const updatedTag = zfbTag.replace("-", "");
+    return {
+      ...row,
+      payee: updatedPayee ?? payee,
+      notes: updatedNotes ?? notes,
+      tag: updatedTag,
+    };
+  }
 
-    // Check if cft exists in `payee` or `notes`
-    updatedPayee = removeLeadingTag(payee, cftTag);
-    updatedNotes = removeLeadingTag(notes, cftTag);
+  // Check if cft exists in `payee` or `notes`
+  updatedPayee = removeLeadingTag(payee, cftTag);
+  updatedNotes = removeLeadingTag(notes, cftTag);
 
-    if (updatedPayee || updatedNotes) {
-      const updatedTag = cftTag.replace("-", "");
-      return {
-        ...v,
-        payee: updatedPayee ?? payee,
-        notes: updatedNotes ?? notes,
-        tag: updatedTag,
-      };
-    }
+  if (updatedPayee || updatedNotes) {
+    const updatedTag = cftTag.replace("-", "");
+    return {
+      ...row,
+      payee: updatedPayee ?? payee,
+      notes: updatedNotes ?? notes,
+      tag: updatedTag,
+    };
+  }
 
-    return v;
-  });
+  return row;
 };
 
 const removeLeadingTag = (text, tag) => {
@@ -149,10 +146,68 @@ const removeLeadingTag = (text, tag) => {
   return updatedText;
 };
 
+const fillMissingPayee = (row) => {
+  // Fills in payee column where no data exists
+  let updatedRow;
+  updatedRow = fillPayeeFromNotes(row);
+  updatedRow = fillPayeeBank(updatedRow);
+  return updatedRow;
+};
+
+const fillPayeeFromNotes = (row) => {
+  // If `payee` is missing text, fill in with text from `notes`
+  if (row.payee == "") {
+    return { ...row, payee: row.notes };
+  }
+  return row;
+};
+
+const fillPayeeBank = (row) => {
+  // If both `payee` and `notes` are missing in text and `摘要` column is `利息存入`, then fill `payee` as "中国建设银行股份有限公司上海分行运行中心" and `notes` as "利息存入"
+
+  if (row.payee == "" && row.notes == "" && row.摘要 == "利息存入") {
+    return {
+      ...row,
+      payee: "中国建设银行股份有限公司上海分行运行中心",
+      notes: "利息存入",
+    };
+  }
+  return row;
+};
+
+const replaceNotesWith摘要 = (row) => {
+  // If notes is empty, then replace notes with "ATM存款" (only after notes is copied to payee)
+  if (row.notes == "") {
+    return { ...row, notes: row.摘要 };
+  }
+  return row;
+};
+
+const updateNotes = (row) => {
+  // If `摘要` is not "消费" and `摘要` does not equal `notes`, then append `摘要` text to front of existing notes (after removing tags)
+  console.log(row.摘要, row.notes, row.摘要 !== row.notes);
+  if (!(row.摘要 == "消费") && !(row.摘要 == row.notes)) {
+    return { ...row, notes: row.摘要 + "-" + row.notes };
+  }
+  return row;
+};
+
+const removeDuplicateNotes = (row) => {
+  // TODO: If text in `payee` and `notes` are the same, remove text in `notes`
+  if (row.payee == row.notes) {
+    return { ...row, notes: "" };
+  }
+  return row;
+};
+
 module.exports = {
   combineOutflowInflow,
   readCSV,
   convertJSONtoCSV,
   saveToFile,
   stripLeadingTags,
+  fillMissingPayee,
+  updateNotes,
+  removeDuplicateNotes,
+  replaceNotesWith摘要,
 };
