@@ -1,18 +1,16 @@
+const { readCSV } = require("../helper");
 const {
-  readCSV,
   combineOutflowInflow,
-  convertJSONtoCSV,
-  saveToFile,
   stripLeadingTags,
   fillMissingPayee,
-  updateNotes,
   removeDuplicateNotes,
   replaceNotesWith摘要,
+  updateNotes,
   removeEmptyRows,
-} = require("../functions");
+} = require("../manipulate");
 
-const parse_bank_txns = async (bank_upload) => {
-  console.log("parse_bank_txns");
+const parseBankTxns = async (bank_upload) => {
+  console.log("parseBankTxns");
   let data;
   try {
     // Read CSV
@@ -31,15 +29,10 @@ const parse_bank_txns = async (bank_upload) => {
       return row;
     });
 
-    // TODO: (BIG) Bring in Alipay and WeChat pay txn data to inform notes on bank txns
-
-    // Convert back into CSV
-    const dataCSV = await convertJSONtoCSV(data);
-    const { tempFilePath, fileName } = await saveToFile(dataCSV);
-    return { tempFilePath, fileName };
+    return data;
   } catch (err) {
     console.error(err);
   }
 };
 
-module.exports = { parse_bank_txns };
+module.exports = { parseBankTxns };
