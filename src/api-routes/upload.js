@@ -1,10 +1,12 @@
-const { TEMP_FILE_PATH, TEMP_FOLDER } = require("../lib/constants");
-const { parseBankTxns } = require("./banks/bank");
+const { TEMP_FOLDER } = require("../lib/constants");
+const { parseAlipayTxns } = require("../parse/banks/alipay");
+const { parseBankTxns } = require("../parse/banks/bank");
+const { mergeAlipayData, mergeWeChatData } = require("../parse/combine");
 const {
   convertToZipFile,
   convertToTempFile,
   convertJSONtoCSV,
-} = require("./helper");
+} = require("../parse/helper");
 
 const upload = async (req, res) => {
   const { files } = req;

@@ -1,7 +1,7 @@
 const path = require("path");
 const express = require("express");
 const fileUpload = require("express-fileupload");
-const { upload } = require("./parse/functions");
+const { upload } = require("./api-routes/upload");
 
 const app = express();
 
