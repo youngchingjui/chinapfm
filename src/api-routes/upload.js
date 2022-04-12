@@ -9,8 +9,8 @@ const {
 } = require("../parse/helper");
 const fs = require("fs");
 const csvParser = require("csv-parser");
-const { Transform } = require("stream");
 const iconv = require("iconv-lite");
+const transforms = require("../transforms");
 
 const upload = async (req, res) => {
   const { files } = req;
@@ -47,19 +47,12 @@ const upload = async (req, res) => {
     mapValues: ({ value }) => value.replace(/\s+$/, ""),
   });
 
-  const alipayTransform = new Transform({ objectMode: true });
-  alipayTransform._transform = (chunk, encoding, callback) => {
-    const { amount } = chunk;
-    alipayTransform.push({ ...chunk, amount: parseFloat(amount) });
-    callback();
-  };
-
   alipayData = await new Promise((resolve, reject) => {
     const result = [];
     fs.createReadStream(alipayUpload.tempFilePath)
       .pipe(converterStream)
       .pipe(alipayParser)
-      .pipe(alipayTransform)
+      .pipe(transforms.alipay)
       .on("data", (data) => {
         result.push(data);
       })
@@ -119,8 +112,9 @@ const upload = async (req, res) => {
   ]);
 
   // return ZIP file
-  res.attachment();
-  res.download(tempFilePath, fileName);
+  // res.attachment();
+  // res.download(tempFilePath, fileName);
+  res.status(204).send();
 
   console.log("Sent!");
 };
