@@ -3,4 +3,4 @@ package-lock.json
 /node_modules
 /server
 bank_txns.csv
-temp/transactions.zip
+/temp

@@ -1,5 +1,5 @@
 const { TEMP_FOLDER } = require("../lib/constants");
-const { parseAlipayTxns } = require("../parse/banks/alipay");
+const { headerMappings } = require("../mappings/header");
 const { parseBankTxns } = require("../parse/banks/bank");
 const { mergeAlipayData, mergeWeChatData } = require("../parse/combine");
 const {
@@ -7,6 +7,10 @@ const {
   convertToTempFile,
   convertJSONtoCSV,
 } = require("../parse/helper");
+const fs = require("fs");
+const csvParser = require("csv-parser");
+const { Transform } = require("stream");
+const iconv = require("iconv-lite");
 
 const upload = async (req, res) => {
   const { files } = req;
@@ -23,13 +27,50 @@ const upload = async (req, res) => {
     }
   }
 
-  if (alipayUpload) {
-    try {
-      alipayData = await parseAlipayTxns(alipayUpload);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  // Read Alipay data
+  alipayData = [];
+  const converterStream = iconv.decodeStream("GB18030");
+  const alipayParser = csvParser({
+    skipLines: 4,
+    mapHeaders: ({ header }) => {
+      var newHeader = header;
+
+      // Remove trailing spaces
+      newHeader = newHeader.replace(/\s+$/, "");
+
+      // Replace certain headers
+      if (newHeader in headerMappings.alipay) {
+        return headerMappings.alipay[newHeader];
+      }
+      return newHeader;
+    },
+    mapValues: ({ value }) => value.replace(/\s+$/, ""),
+  });
+
+  const alipayTransform = new Transform({ objectMode: true });
+  alipayTransform._transform = (chunk, encoding, callback) => {
+    const { amount } = chunk;
+    alipayTransform.push({ ...chunk, amount: parseFloat(amount) });
+    callback();
+  };
+
+  alipayData = await new Promise((resolve, reject) => {
+    const result = [];
+    fs.createReadStream(alipayUpload.tempFilePath)
+      .pipe(converterStream)
+      .pipe(alipayParser)
+      .pipe(alipayTransform)
+      .on("data", (data) => {
+        result.push(data);
+      })
+      .on("end", () => {
+        console.log("Finished processing Alipay data");
+        resolve(result);
+      })
+      .on("error", (err) => {
+        reject(err);
+      });
+  });
 
   if (wechatUpload) {
     try {
@@ -52,13 +93,13 @@ const upload = async (req, res) => {
   let bankFile, alipayFile, weChatFile;
   try {
     if (bankData) {
-      bankFile = await convertToTempFile(bankData);
+      bankFile = await convertToTempFile(bankData, "./temp/ccb.csv");
     }
     if (alipayData) {
-      alipayFile = await convertToTempFile(alipayData);
+      alipayFile = await convertToTempFile(alipayData, "./temp/alipay.csv");
     }
     if (wechatData) {
-      weChatFile = await convertToTempFile(wechatData);
+      weChatFile = await convertToTempFile(wechatData, "./temp/wechatpay.csv");
     }
   } catch (err) {
     console.error(err);

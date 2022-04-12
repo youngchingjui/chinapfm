@@ -1,4 +1,4 @@
-const { readCSV } = require("../helper");
+const { readCSV, mapHeaders } = require("../helper");
 const {
   combineOutflowInflow,
   stripLeadingTags,
@@ -14,7 +14,10 @@ const parseBankTxns = async (bank_upload) => {
   let data;
   try {
     // Read CSV
-    data = await readCSV(bank_upload);
+    data = await readCSV(bank_upload, {
+      skipLines: 3,
+      mapHeaders,
+    });
 
     // Manipulate and clean data
     data = data.map((v) => {

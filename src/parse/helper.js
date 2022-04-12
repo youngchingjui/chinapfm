@@ -1,39 +1,31 @@
 const fs = require("fs");
 const csvParser = require("csv-parser");
 const { parseAsync } = require("json2csv");
-const { headerMappings } = require("../mappings/header");
 const {
-  TEMP_FOLDER,
-  TEMP_FILE_PATH,
-  FILE_NAME,
-  HEADER_FIELDS,
-} = require("../lib/constants");
+  headerMappings: { ccb },
+} = require("../mappings/header");
+const { TEMP_FOLDER, FILE_NAME, HEADER_FIELDS } = require("../lib/constants");
 
 const mapHeaders = ({ header }) => {
   // remove trailing spaces
   const formattedHeader = header.replace(/\s+$/, "");
 
   // translate required headings into English
-  if (formattedHeader in headerMappings) {
-    return headerMappings[formattedHeader];
+  if (formattedHeader in ccb) {
+    return ccb[formattedHeader];
   }
   return formattedHeader;
 };
 
-const readCSV = (bankUpload) => {
+const readCSV = (bankUpload, options) => {
   console.log("readCSV");
   // Reads CSV from filepath
   // Also replaces some headers into English
 
-  const csvParserOptions = {
-    skipLines: 3,
-    mapHeaders: mapHeaders,
-  };
-
   return new Promise((resolve, reject) => {
     const result = [];
     fs.createReadStream(bankUpload.tempFilePath).pipe(
-      csvParser(csvParserOptions)
+      csvParser(options)
         .on("data", (data) => {
           result.push(data);
         })
@@ -48,16 +40,20 @@ const readCSV = (bankUpload) => {
 };
 
 const removeLeadingTag = (text, tag) => {
-  let updatedText = null;
-  if (text.startsWith(tag)) {
-    updatedText = text.replace(tag, "");
+  if (!text) {
+    return text;
+  }
+
+  let newText = text;
+  if (newText.startsWith(tag)) {
+    newText = newText.replace(tag, "");
     // Sometimes tag appears twice. Remove both times
-    if (updatedText.startsWith(tag)) {
-      updatedText = updatedText.replace(tag, "");
+    if (newText.startsWith(tag)) {
+      newText = newText.replace(tag, "");
     }
   }
 
-  return updatedText;
+  return newText;
 };
 
 const fillPayeeFromNotes = (row) => {
@@ -85,7 +81,6 @@ const convertToZipFile = async (files) => {
   const JSZip = require("jszip");
   const zip = new JSZip();
 
-  console.log(files);
   for (const file of files) {
     if (!file) {
       return;
@@ -107,10 +102,9 @@ const convertToZipFile = async (files) => {
   });
 };
 
-const convertToTempFile = async (data) => {
+const convertToTempFile = async (data, filePath) => {
   const dataCSV = await convertJSONtoCSV(data);
-  const { tempFilePath, fileName } = await saveToFile(dataCSV);
-  console.log(tempFilePath, fileName);
+  const { tempFilePath, fileName } = await saveToFile(dataCSV, filePath);
   return { tempFilePath, fileName };
 };
 
@@ -128,17 +122,17 @@ const convertJSONtoCSV = (data) => {
   });
 };
 
-const saveToFile = (dataCSV) => {
+const saveToFile = (dataCSV, filePath) => {
   // Write the json results to file
   console.log("saveToFile");
 
   // TODO: Save only temporarily, delete after use
   return new Promise((resolve, reject) => {
-    fs.writeFile(TEMP_FILE_PATH, dataCSV, {}, (err) => {
+    fs.writeFile(filePath, dataCSV, {}, (err) => {
       if (err) {
         reject(err);
       }
-      resolve({ tempFilePath: TEMP_FILE_PATH, fileName: FILE_NAME });
+      resolve({ tempFilePath: filePath, fileName: FILE_NAME });
     });
   });
 };
@@ -152,4 +146,5 @@ module.exports = {
   convertToTempFile,
   convertJSONtoCSV,
   saveToFile,
+  mapHeaders,
 };
