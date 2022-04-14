@@ -49,8 +49,6 @@ const upload = async (req, res) => {
     bankData = mergeWeChatData(wechatData, bankData);
   }
 
-  console.log(bankData);
-
   // Convert cleaned data into temp files
   let bankFile, alipayFile, weChatFile;
   try {

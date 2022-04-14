@@ -21,9 +21,15 @@ const parseBankTxns = async (bank_upload) => {
 
     // Manipulate and clean data
     data = data.map((v) => {
+      const tag = { zfb: "支付宝", cft: "财付通" };
       let row = v;
       row = combineOutflowInflow(row);
-      row = stripLeadingTags(row);
+
+      // Remove "支付宝-" or "财付通-" from `payee` and `notes` columns.
+      // Add to new `tags` column
+      row = stripLeadingTags(row, tag.zfb);
+      row = stripLeadingTags(row, tag.cft);
+
       row = fillMissingPayee(row);
       row = removeDuplicateNotes(row);
       row = replaceNotesWith摘要(row);

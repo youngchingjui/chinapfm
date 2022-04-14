@@ -1,8 +1,4 @@
-const {
-  removeLeadingTag,
-  fillPayeeFromNotes,
-  fillPayeeBank,
-} = require("./helper");
+const { fillPayeeFromNotes, fillPayeeBank } = require("./helper");
 
 const combineOutflowInflow = (row) => {
   // Combine outflow and inflow into 1 column, called "amount"
@@ -19,48 +15,35 @@ const combineOutflowInflow = (row) => {
   return row;
 };
 
-const stripLeadingTags = (row) => {
-  // Remove "支付宝-" or "财付通-" from `payee` and `notes` columns.
+const stripLeadingTags = (row, tag) => {
+  // Removes `tag` from `payee` and `notes` columns.
   // Add to new `tags` column
   // Note: Sometimes leading tags appear twice. We remove both
   // TODO: Remove "消费-" from `payee`, leave it in `notes`
-  // TODO: Somehow all rows are adding 支付宝 tags, figure out why
-  const zfbTag = "支付宝-";
-  const cftTag = "财付通-";
 
-  const { payee, notes } = row;
+  let updatedPayee = row.payee;
+  let updatedNotes = row.notes;
+  let updatedTag = row.tag;
 
-  let updatedPayee,
-    updatedNotes = null;
+  if (updatedPayee.startsWith(tag)) {
+    updatedTag = tag;
+    updatedPayee = updatedPayee.replace(tag + "-", "");
 
-  updatedPayee = removeLeadingTag(payee, zfbTag);
-  updatedNotes = removeLeadingTag(notes, zfbTag);
-
-  if (updatedPayee || updatedNotes) {
-    const updatedTag = zfbTag.replace("-", "");
-    return {
-      ...row,
-      payee: updatedPayee ?? payee,
-      notes: updatedNotes ?? notes,
-      tag: updatedTag,
-    };
+    if (updatedPayee.startsWith(tag)) {
+      updatedPayee = updatedPayee.replace(tag + "-", "");
+    }
   }
 
-  // Check if cft exists in `payee` or `notes`
-  updatedPayee = removeLeadingTag(payee, cftTag);
-  updatedNotes = removeLeadingTag(notes, cftTag);
+  if (updatedNotes.startsWith(tag)) {
+    updatedTag = tag;
+    updatedNotes = updatedNotes.replace(tag + "-", "");
 
-  if (updatedPayee || updatedNotes) {
-    const updatedTag = cftTag.replace("-", "");
-    return {
-      ...row,
-      payee: updatedPayee ?? payee,
-      notes: updatedNotes ?? notes,
-      tag: updatedTag,
-    };
+    if (updatedNotes.startsWith(tag)) {
+      updatedNotes = updatedNotes.replace(tag + "-", "");
+    }
   }
 
-  return row;
+  return { ...row, payee: updatedPayee, notes: updatedNotes, tag: updatedTag };
 };
 
 const fillMissingPayee = (row) => {

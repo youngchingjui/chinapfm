@@ -39,23 +39,6 @@ const readCSV = (bankUpload, options) => {
   });
 };
 
-const removeLeadingTag = (text, tag) => {
-  if (!text) {
-    return text;
-  }
-
-  let newText = text;
-  if (newText.startsWith(tag)) {
-    newText = newText.replace(tag, "");
-    // Sometimes tag appears twice. Remove both times
-    if (newText.startsWith(tag)) {
-      newText = newText.replace(tag, "");
-    }
-  }
-
-  return newText;
-};
-
 const fillPayeeFromNotes = (row) => {
   // If `payee` is missing text, fill in with text from `notes`
   if (row.payee == "") {
@@ -139,7 +122,6 @@ const saveToFile = (dataCSV, filePath) => {
 
 module.exports = {
   readCSV,
-  removeLeadingTag,
   fillPayeeFromNotes,
   fillPayeeBank,
   convertToZipFile,
