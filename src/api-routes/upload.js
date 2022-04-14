@@ -1,6 +1,6 @@
 const { TEMP_FOLDER } = require("../lib/constants");
 const { parseBankTxns } = require("../parse/banks/bank");
-const { mergeAlipayData, mergeWeChatData } = require("../parse/combine");
+const { mergeAlipayData, mergeWeChatData } = require("../parse/merge");
 const {
   convertToZipFile,
   convertToTempFile,
