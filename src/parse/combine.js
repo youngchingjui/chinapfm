@@ -9,8 +9,10 @@
 const mergeAlipayData = (alipayData, bankData) => {
   // TODO: If a transaction on `bankData` has the same date and amount as a txn on `alipayData`
   // and `tag` is `支付宝`, then replace the `payee` and `notes` values with those from `alipayData`.
+  // Add `true` to `isBankLinked` column in `alipayData`
 
-  return bankData.map((bRow) => {
+  let updatedAlipayData = alipayData;
+  const updatedBankData = bankData.map((bRow) => {
     // Only compare rows where `tag` is `支付宝`
     if (bRow.tag != `支付宝`) {
       return bRow;
@@ -29,6 +31,19 @@ const mergeAlipayData = (alipayData, bankData) => {
       return bRow;
     } else if (matches.length == 1) {
       const aRow = matches[0];
+
+      // Mark row in updatedAlipayData with `true` under `isBankLinked`
+      updatedAlipayData = updatedAlipayData.map((v) => {
+        if (
+          v.date == aRow.date &&
+          v.notes == aRow.notes &&
+          v.amount == aRow.amount
+        ) {
+          return { ...v, isBankLinked: true };
+        }
+        return v;
+      });
+
       // Replace bRow `payee` and `notes` from aRow
       return { ...bRow, payee: aRow.payee, notes: aRow.notes, isAlipay: true };
     } else {
@@ -36,6 +51,8 @@ const mergeAlipayData = (alipayData, bankData) => {
       return bRow;
     }
   });
+
+  return { bankData: updatedBankData, alipayData: updatedAlipayData };
 };
 
 const mergeWeChatData = (wechatData, bankData) => {

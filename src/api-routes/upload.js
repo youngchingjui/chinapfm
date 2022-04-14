@@ -42,7 +42,9 @@ const upload = async (req, res) => {
 
   // Merge txns into bank_txns
   if (alipayData && bankData) {
-    bankData = mergeAlipayData(alipayData, bankData);
+    mergeResults = mergeAlipayData(alipayData, bankData);
+    alipayData = mergeResults.alipayData;
+    bankData = mergeResults.bankData;
   }
 
   if (wechatData && bankData) {
