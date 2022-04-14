@@ -24,6 +24,7 @@ const stripLeadingTags = (row) => {
   // Add to new `tags` column
   // Note: Sometimes leading tags appear twice. We remove both
   // TODO: Remove "消费-" from `payee`, leave it in `notes`
+  // TODO: Somehow all rows are adding 支付宝 tags, figure out why
   const zfbTag = "支付宝-";
   const cftTag = "财付通-";
 

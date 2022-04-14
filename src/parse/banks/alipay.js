@@ -1,28 +1,50 @@
-const { readCSV } = require("../helper");
+const csvParser = require("csv-parser");
+const iconv = require("iconv-lite");
+const fs = require("fs");
+const { headerMappings } = require("../../mappings/header");
+const transforms = require("../../transforms");
 
-const parseAlipayTxns = async (alipayData) => {
-  // Receives alipay data in JSON format
+const parseAlipayTxns = async (alipayUpload) => {
+  // Receives alipay file upload
   // Manipulates and cleans data as per business logic
   // Returns cleaned data in JSON format
   console.log("parseAlipayTxns");
-  console.log(alipayData);
 
-  let data = alipayData;
-  try {
-    // Read CSV
-    data = await readCSV(data);
+  const converterStream = iconv.decodeStream("GB18030");
+  const alipayParser = csvParser({
+    skipLines: 4,
+    mapHeaders: ({ header }) => {
+      var newHeader = header;
 
-    // Manipulate and clean data
+      // Remove trailing spaces
+      newHeader = newHeader.replace(/\s+$/, "");
 
-    data = data.map((v) => {
-      let row = v;
-      return row;
-    });
-  } catch (err) {
-    console.error(err);
-  }
+      // Replace certain headers
+      if (newHeader in headerMappings.alipay) {
+        return headerMappings.alipay[newHeader];
+      }
+      return newHeader;
+    },
+    mapValues: ({ value }) => value.replace(/\s+$/, ""),
+  });
 
-  return data;
+  return await new Promise((resolve, reject) => {
+    const result = [];
+    fs.createReadStream(alipayUpload.tempFilePath)
+      .pipe(converterStream)
+      .pipe(alipayParser)
+      .pipe(transforms.alipay)
+      .on("data", (data) => {
+        result.push(data);
+      })
+      .on("end", () => {
+        console.log("Finished processing Alipay data");
+        resolve(result);
+      })
+      .on("error", (err) => {
+        reject(err);
+      });
+  });
 };
 
 module.exports = { parseAlipayTxns };

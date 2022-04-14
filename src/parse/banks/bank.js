@@ -21,14 +21,24 @@ const parseBankTxns = async (bank_upload) => {
 
     // Manipulate and clean data
     data = data.map((v) => {
-      let row;
-      row = combineOutflowInflow(v);
+      let row = v;
+      row = combineOutflowInflow(row);
       row = stripLeadingTags(row);
       row = fillMissingPayee(row);
       row = removeDuplicateNotes(row);
       row = replaceNotesWith摘要(row);
       row = updateNotes(row);
       row = removeEmptyRows(row);
+
+      // Convert date to Date format
+      const { date } = row;
+      const year = Number(date.substring(0, 4));
+      const month = Number(date.substring(4, 6)) - 1;
+      const day = Number(date.substring(6));
+      row = {
+        ...row,
+        date: new Date(year, month, day),
+      };
       return row;
     });
 

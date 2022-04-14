@@ -13,7 +13,7 @@ alipay._transform = (chunk, encoding, callback) => {
   }
 
   // Convert `date` to actual date
-  const newDate = Date.parse(date);
+  const newDate = new Date(date);
 
   // Remove rows without data in `date`
   if (date) {

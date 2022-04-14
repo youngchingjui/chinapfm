@@ -1,5 +1,4 @@
 const { TEMP_FOLDER } = require("../lib/constants");
-const { headerMappings } = require("../mappings/header");
 const { parseBankTxns } = require("../parse/banks/bank");
 const { mergeAlipayData, mergeWeChatData } = require("../parse/combine");
 const {
@@ -7,10 +6,7 @@ const {
   convertToTempFile,
   convertJSONtoCSV,
 } = require("../parse/helper");
-const fs = require("fs");
-const csvParser = require("csv-parser");
-const iconv = require("iconv-lite");
-const transforms = require("../transforms");
+const { parseAlipayTxns } = require("../parse/banks/alipay");
 
 const upload = async (req, res) => {
   const { files } = req;
@@ -28,42 +24,13 @@ const upload = async (req, res) => {
   }
 
   // Read Alipay data
-  alipayData = [];
-  const converterStream = iconv.decodeStream("GB18030");
-  const alipayParser = csvParser({
-    skipLines: 4,
-    mapHeaders: ({ header }) => {
-      var newHeader = header;
-
-      // Remove trailing spaces
-      newHeader = newHeader.replace(/\s+$/, "");
-
-      // Replace certain headers
-      if (newHeader in headerMappings.alipay) {
-        return headerMappings.alipay[newHeader];
-      }
-      return newHeader;
-    },
-    mapValues: ({ value }) => value.replace(/\s+$/, ""),
-  });
-
-  alipayData = await new Promise((resolve, reject) => {
-    const result = [];
-    fs.createReadStream(alipayUpload.tempFilePath)
-      .pipe(converterStream)
-      .pipe(alipayParser)
-      .pipe(transforms.alipay)
-      .on("data", (data) => {
-        result.push(data);
-      })
-      .on("end", () => {
-        console.log("Finished processing Alipay data");
-        resolve(result);
-      })
-      .on("error", (err) => {
-        reject(err);
-      });
-  });
+  if (alipayUpload) {
+    try {
+      alipayData = await parseAlipayTxns(alipayUpload);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   if (wechatUpload) {
     try {
@@ -81,6 +48,8 @@ const upload = async (req, res) => {
   if (wechatData && bankData) {
     bankData = mergeWeChatData(wechatData, bankData);
   }
+
+  console.log(bankData);
 
   // Convert cleaned data into temp files
   let bankFile, alipayFile, weChatFile;
