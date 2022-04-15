@@ -14,7 +14,7 @@ const upload = async (req, res) => {
 
   let bankData, alipayData, wechatData;
 
-  // Read and clean data
+  // Read and clean bank data
   if (bankUpload) {
     try {
       bankData = await parseBankTxns(bankUpload);
@@ -23,7 +23,7 @@ const upload = async (req, res) => {
     }
   }
 
-  // Read Alipay data
+  // Read and clean Alipay data
   if (alipayUpload) {
     try {
       alipayData = await parseAlipayTxns(alipayUpload);
@@ -42,9 +42,7 @@ const upload = async (req, res) => {
 
   // Merge txns into bank_txns
   if (alipayData && bankData) {
-    mergeResults = mergeAlipayData(alipayData, bankData);
-    alipayData = mergeResults.alipayData;
-    bankData = mergeResults.bankData;
+    bankData = mergeAlipayData(alipayData, bankData);
   }
 
   if (wechatData && bankData) {
