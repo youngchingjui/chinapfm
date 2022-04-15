@@ -43,6 +43,15 @@ const upload = async (req, res) => {
   // Merge txns into bank_txns
   if (alipayData && bankData) {
     bankData = mergeAlipayData(alipayData, bankData);
+    // Confirm which alipay txns are linked by adding `true` to `isBankLinked` column
+
+    // Of remaining non-linked bank + alipay data, link txns that might be split into 2+ txns on alipay, but show up as 1 on bank
+
+    // Label linked alipay txns by adding `true` to `isBankLinked` column
+
+    // Of remaining non-linked bank + alipay data, if bank row.amount < alipay row.amount, then link the 2
+
+    // For links where amount don't equal, create a row on alipay with extra amount
   }
 
   if (wechatData && bankData) {

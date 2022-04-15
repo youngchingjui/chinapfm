@@ -1,8 +1,7 @@
-const csvParser = require("csv-parser");
 const iconv = require("iconv-lite");
 const fs = require("fs");
-const { headerMappings } = require("../../mappings/header");
 const transforms = require("../../transforms");
+const csvParsers = require("../csv");
 
 const parseAlipayTxns = async (alipayUpload) => {
   // Receives alipay file upload
@@ -11,28 +10,12 @@ const parseAlipayTxns = async (alipayUpload) => {
   console.log("parseAlipayTxns");
 
   const converterStream = iconv.decodeStream("GB18030");
-  const alipayParser = csvParser({
-    skipLines: 4,
-    mapHeaders: ({ header }) => {
-      var newHeader = header;
-
-      // Remove trailing spaces
-      newHeader = newHeader.replace(/\s+$/, "");
-
-      // Replace certain headers
-      if (newHeader in headerMappings.alipay) {
-        return headerMappings.alipay[newHeader];
-      }
-      return newHeader;
-    },
-    mapValues: ({ value }) => value.replace(/\s+$/, ""),
-  });
 
   return await new Promise((resolve, reject) => {
     const result = [];
     fs.createReadStream(alipayUpload.tempFilePath)
       .pipe(converterStream)
-      .pipe(alipayParser)
+      .pipe(csvParsers.alipay)
       .pipe(transforms.alipay)
       .on("data", (data) => {
         result.push(data);
