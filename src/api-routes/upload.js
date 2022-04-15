@@ -8,6 +8,7 @@ const {
 } = require("../parse/helper");
 const { parseAlipayTxns } = require("../parse/banks/alipay");
 const parseWechatTxns = require("../parse/banks/wechat");
+const merge = require("../parse/merge");
 
 const upload = async (req, res) => {
   const { files } = req;
@@ -44,7 +45,8 @@ const upload = async (req, res) => {
 
   // Merge txns into bank_txns
   if (alipayData && bankData) {
-    bankData = mergeAlipayData(alipayData, bankData);
+    bankData = merge.alipay(alipayData, bankData);
+    // TODO: ALL BELOW
     // Confirm which alipay txns are linked by adding `true` to `isBankLinked` column
 
     // Of remaining non-linked bank + alipay data, link txns that might be split into 2+ txns on alipay, but show up as 1 on bank
@@ -57,7 +59,7 @@ const upload = async (req, res) => {
   }
 
   if (wechatData && bankData) {
-    bankData = mergeWeChatData(wechatData, bankData);
+    bankData = merge.wechat(wechatData, bankData);
   }
 
   // Convert cleaned data into temp files

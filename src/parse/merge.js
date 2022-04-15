@@ -2,10 +2,10 @@
 // Txns from Alipay and WeChat pay provide more details on individual transactions.
 // We add these details to the bank transactions data
 
-// TODO: Some Alipay txns use mix of alipay balance + card on file. These need to be matched by date, and ccb amount must be less than alipay amount. Ultimate, need a manual check on alipay for that txn to see if a portion really was deducted from alipay balance
-// TODO: Alipay Taobao items bought together on 1 payment show as 1txn on CCB, but multiple lines on TB. Adding remaining unaccounted amounts for txns on same day often matches. Or playing with different permutations of grouping will add up.
-// TODO: Some repeat transactions happen on same day, with same payee + notes, + same amount. Find out how to still merge these txns
-const mergeAlipayData = (alipayData, bankData) => {
+const alipay = (alipayData, bankData) => {
+  // TODO: Some Alipay txns use mix of alipay balance + card on file. These need to be matched by date, and ccb amount must be less than alipay amount. Ultimate, need a manual check on alipay for that txn to see if a portion really was deducted from alipay balance
+  // TODO: Alipay Taobao items bought together on 1 payment show as 1txn on CCB, but multiple lines on TB. Adding remaining unaccounted amounts for txns on same day often matches. Or playing with different permutations of grouping will add up.
+  // TODO: Some repeat transactions happen on same day, with same payee + notes, + same amount. Find out how to still merge these txns
   // If a transaction on `bankData` has the same date and amount as a txn on `alipayData`
   // and `tag` is `支付宝`, then replace the `payee` and `notes` values with those from `alipayData`.
   // Add `true` to `isBankLinked` column in `alipayData`
@@ -59,8 +59,38 @@ const mergeAlipayData = (alipayData, bankData) => {
   });
 };
 
-const mergeWeChatData = (wechatData, bankData) => {
-  return bankData;
+const wechat = (wechatData, bankData) => {
+  return bankData.map((bRow) => {
+    // Only merge rows where `tag` == "财付通"
+    if (bRow.tag != "财付通") {
+      return bRow;
+    }
+
+    // Find txns in `wechatData` that match `bRow` by date + amount
+    const matches = wechatData.filter((wRow) => {
+      return (
+        wRow.date.toLocaleDateString() == bRow.date.toLocaleDateString() &&
+        wRow.amount == bRow.amount
+      );
+    });
+
+    if (matches.length == 0) {
+      // Didn't find any matches
+      return bRow;
+    } else if (matches.length == 1) {
+      // Perfect match. Replace `payee` and `notes` from wechat data
+      const wRow = matches[0];
+      return { ...bRow, payee: wRow.payee, notes: wRow.notes };
+    } else {
+      // There are 2+ matches
+      console.warn(
+        "There are 2+ items in wechat data with same date and amount",
+        JSON.stringify(matches, null, 4)
+      );
+      return bRow;
+    }
+  });
 };
 
-module.exports = { mergeAlipayData, mergeWeChatData };
+const merge = { alipay, wechat };
+module.exports = merge;
