@@ -18,5 +18,15 @@ const alipay = csvParser({
   mapValues: ({ value }) => value.replace(/\s+$/, ""),
 });
 
-const csvParsers = { alipay };
+const wechat = csvParser({
+  skipLines: 16,
+  mapHeaders: ({ header }) => {
+    if (header in headerMappings.wechat) {
+      return headerMappings.wechat[header];
+    }
+    return header;
+  },
+});
+
+const csvParsers = { alipay, wechat };
 module.exports = csvParsers;

@@ -7,6 +7,7 @@ const {
   convertJSONtoCSV,
 } = require("../parse/helper");
 const { parseAlipayTxns } = require("../parse/banks/alipay");
+const parseWechatTxns = require("../parse/banks/wechat");
 
 const upload = async (req, res) => {
   const { files } = req;
@@ -32,6 +33,7 @@ const upload = async (req, res) => {
     }
   }
 
+  // Read and clean WeChat pay data
   if (wechatUpload) {
     try {
       wechatData = await parseWechatTxns(wechatUpload);

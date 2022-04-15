@@ -12,6 +12,12 @@ const headerMappings = {
     商品名称: "notes",
     "金额（元）": "amount",
   },
+  wechat: {
+    交易时间: "date",
+    交易对方: "payee",
+    商品: "notes",
+    "金额(元)": "amount",
+  },
 };
 
 module.exports = { headerMappings };

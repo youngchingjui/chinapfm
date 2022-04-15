@@ -23,4 +23,33 @@ alipay._transform = (chunk, encoding, callback) => {
   callback();
 };
 
-module.exports = { alipay };
+const wechat = new Transform({ objectMode: true });
+wechat._transform = (chunk, encoding, callback) => {
+  const { date, amount, notes } = chunk;
+
+  // Convert date to Date object
+  const [dateString, timeString] = date.split(" ");
+  const [day, month, year] = dateString.split("-");
+  const [hour, seconds] = timeString.split(":");
+  const newDate = new Date(2000 + Number(year), month - 1, day, hour, seconds);
+
+  // Remove "¥" from `amount` and convert to Number object
+  var newAmount = Number(amount.replace("¥", ""));
+
+  // If `收/支` == "支出", make `amount` negative
+  if (chunk["收/支"] == "支出") {
+    newAmount = -newAmount;
+  }
+
+  // If `notes` == "/", copy `交易类型` into `商品`
+  var newNotes = notes;
+  if (newNotes == "/") {
+    newNotes = chunk["交易类型"];
+  }
+
+  wechat.push({ ...chunk, date: newDate, amount: newAmount, notes: newNotes });
+  callback();
+};
+
+const transforms = { alipay, wechat };
+module.exports = transforms;
