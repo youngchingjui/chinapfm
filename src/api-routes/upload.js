@@ -1,4 +1,6 @@
-const { TEMP_FOLDER } = require("../lib/constants");
+const fs = require("fs");
+const { AsyncParser } = require("json2csv");
+const { TEMP_FOLDER, HEADER_FIELDS } = require("../lib/constants");
 const { parseBankTxns } = require("../parse/banks/bank");
 const { mergeAlipayData, mergeWeChatData } = require("../parse/merge");
 const {
@@ -22,10 +24,9 @@ const upload = async (req, res) => {
         const txnData = await parseBankTxns(fileUpload);
 
         // Save as file
-        const { tempFilePath, fileName } = await convertToTempFile(
-          txnData,
-          "./temp/ccb.csv"
-        );
+        const fileName = "ccb.csv";
+        const tempFilePath = `./temp/${fileName}`;
+        await convertToTempFile(txnData, tempFilePath);
 
         // Send the file
         res.attachment();
@@ -41,10 +42,9 @@ const upload = async (req, res) => {
         const txnData = await parseAlipayTxns(fileUpload);
 
         // Save as file
-        const { tempFilePath, fileName } = await convertToTempFile(
-          txnData,
-          "./temp/alipay.csv"
-        );
+        const fileName = "alipay.csv";
+        const tempFilePath = `./temp/${fileName}`;
+        await convertToTempFile(txnData, tempFilePath);
 
         // Send the file
         res.attachment();
@@ -60,10 +60,9 @@ const upload = async (req, res) => {
         const txnData = await parseWechatTxns(fileUpload);
 
         // Save as file
-        const { tempFilePath, fileName } = await convertToTempFile(
-          txnData,
-          "./temp/wechatpay.csv"
-        );
+        const fileName = "wechat.csv";
+        const tempFilePath = `./temp/${fileName}`;
+        await convertToTempFile(txnData, tempFilePath);
 
         // Send the file
         res.attachment();

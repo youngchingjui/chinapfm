@@ -8,7 +8,7 @@ module.exports = Object.freeze({
     "amount",
     "notes",
     "tag",
-    "isAlipay",
-    "isBankLinked",
+    // "isAlipay",
+    // "isBankLinked",
   ],
 });

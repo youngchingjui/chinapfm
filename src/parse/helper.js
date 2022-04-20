@@ -87,22 +87,13 @@ const convertToZipFile = async (files) => {
 
 const convertToTempFile = async (data, filePath) => {
   const dataCSV = await convertJSONtoCSV(data);
-  const { tempFilePath, fileName } = await saveToFile(dataCSV, filePath);
-  return { tempFilePath, fileName };
+  await saveToFile(dataCSV, filePath);
 };
 
 const convertJSONtoCSV = (data) => {
   // parse JSON back to CSV
   console.log("convertJSONtoCSV");
-  return new Promise((resolve, reject) => {
-    const opts = { fields: HEADER_FIELDS };
-
-    parseAsync(data, opts)
-      .then((csv) => {
-        resolve(csv);
-      })
-      .catch((err) => reject(err));
-  });
+  return parseAsync(data, { fields: HEADER_FIELDS });
 };
 
 const saveToFile = (dataCSV, filePath) => {
@@ -115,7 +106,7 @@ const saveToFile = (dataCSV, filePath) => {
       if (err) {
         reject(err);
       }
-      resolve({ tempFilePath: filePath, fileName: FILE_NAME });
+      resolve();
     });
   });
 };

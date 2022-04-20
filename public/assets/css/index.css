@@ -9,11 +9,11 @@ section.hero img {max-width: 550px;}
 section.hero .text {display: flex; flex-direction: column; justify-content: center;}
 section.hero .text button {max-width: 200px;}
 
-section.steps div {display: flex}
-section.steps div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px}
+section.steps div {display: flex; flex-wrap: wrap;}
+section.steps div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; min-width: 400px;}
 
 section.benefits div {display: flex;}
-section.benefits div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; align-items: center;}
+section.benefits div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; align-items: center; }
 section.benefits img {max-width: 200px;}
 
 section.how_to div {display: flex;}
