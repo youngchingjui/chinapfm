@@ -11,92 +11,128 @@ const parseWechatTxns = require("../parse/banks/wechat");
 const merge = require("../parse/merge");
 
 const upload = async (req, res) => {
-  const { files } = req;
-  const { bankUpload, alipayUpload, wechatUpload } = files;
+  const { files, body } = req;
+  const { fileUpload } = files;
+  const { bank } = body;
 
-  let bankData, alipayData, wechatData;
+  switch (bank) {
+    case "ccb":
+      // Read and clean bank data
+      try {
+        const txnData = await parseBankTxns(fileUpload);
 
-  // Read and clean bank data
-  if (bankUpload) {
-    try {
-      bankData = await parseBankTxns(bankUpload);
-    } catch (err) {
-      console.error(err);
-    }
+        // Save as file
+        const { tempFilePath, fileName } = await convertToTempFile(
+          txnData,
+          "./temp/ccb.csv"
+        );
+
+        // Send the file
+        res.attachment();
+        res.download(tempFilePath, fileName);
+        break;
+      } catch (err) {
+        console.error(err);
+      }
+
+    case "alipay":
+      // Read and clean Alipay data
+      try {
+        const txnData = await parseAlipayTxns(fileUpload);
+
+        // Save as file
+        const { tempFilePath, fileName } = await convertToTempFile(
+          txnData,
+          "./temp/alipay.csv"
+        );
+
+        // Send the file
+        res.attachment();
+        res.download(tempFilePath, fileName);
+        break;
+      } catch (err) {
+        console.error(err);
+      }
+
+    case "wechat":
+      // Read and clean WeChat pay data
+      try {
+        const txnData = await parseWechatTxns(fileUpload);
+
+        // Save as file
+        const { tempFilePath, fileName } = await convertToTempFile(
+          txnData,
+          "./temp/wechatpay.csv"
+        );
+
+        // Send the file
+        res.attachment();
+        res.download(tempFilePath, fileName);
+        break;
+      } catch (err) {
+        console.error(err);
+      }
+
+    default:
+      const errorMsg = "Didn't receive file from existing bank options";
+      console.error(errorMsg);
+      res.status(400).send();
   }
 
-  // Read and clean Alipay data
-  if (alipayUpload) {
-    try {
-      alipayData = await parseAlipayTxns(alipayUpload);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  //   // Merge txns into bank_txns
+  //   if (alipayData && bankData) {
+  //     bankData = merge.alipay(alipayData, bankData);
+  //     // TODO: ALL BELOW
+  //     // Confirm which alipay txns are linked by adding `true` to `isBankLinked` column
 
-  // Read and clean WeChat pay data
-  if (wechatUpload) {
-    try {
-      wechatData = await parseWechatTxns(wechatUpload);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  //     // Of remaining non-linked bank + alipay data, link txns that might be split into 2+ txns on alipay, but show up as 1 on bank
 
-  // Merge txns into bank_txns
-  if (alipayData && bankData) {
-    bankData = merge.alipay(alipayData, bankData);
-    // TODO: ALL BELOW
-    // Confirm which alipay txns are linked by adding `true` to `isBankLinked` column
+  //     // Label linked alipay txns by adding `true` to `isBankLinked` column
 
-    // Of remaining non-linked bank + alipay data, link txns that might be split into 2+ txns on alipay, but show up as 1 on bank
+  //     // Of remaining non-linked bank + alipay data, if bank row.amount < alipay row.amount, then link the 2
 
-    // Label linked alipay txns by adding `true` to `isBankLinked` column
+  //     // For links where amount don't equal, create a row on alipay with extra amount
+  //   }
 
-    // Of remaining non-linked bank + alipay data, if bank row.amount < alipay row.amount, then link the 2
+  //   if (wechatData && bankData) {
+  //     bankData = merge.wechat(wechatData, bankData);
+  //   }
 
-    // For links where amount don't equal, create a row on alipay with extra amount
-  }
+  //   // Convert cleaned data into temp files
+  //   let bankFile, alipayFile, weChatFile;
+  //   try {
+  //     if (bankData) {
+  //       bankFile = await convertToTempFile(bankData, "./temp/ccb.csv");
+  //     }
+  //     if (alipayData) {
+  //       alipayFile = await convertToTempFile(alipayData, "./temp/alipay.csv");
+  //     }
+  //     if (wechatData) {
+  //       weChatFile = await convertToTempFile(wechatData, "./temp/wechatpay.csv");
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
 
-  if (wechatData && bankData) {
-    bankData = merge.wechat(wechatData, bankData);
-  }
+  //   const [bankCSV, alipayCSV, wechatCSV] = await Promise.all([
+  //     convertJSONtoCSV(bankData),
+  //     convertJSONtoCSV(alipayData),
+  //     convertJSONtoCSV(wechatData),
+  //   ]);
 
-  // Convert cleaned data into temp files
-  let bankFile, alipayFile, weChatFile;
-  try {
-    if (bankData) {
-      bankFile = await convertToTempFile(bankData, "./temp/ccb.csv");
-    }
-    if (alipayData) {
-      alipayFile = await convertToTempFile(alipayData, "./temp/alipay.csv");
-    }
-    if (wechatData) {
-      weChatFile = await convertToTempFile(wechatData, "./temp/wechatpay.csv");
-    }
-  } catch (err) {
-    console.error(err);
-  }
+  //   // TODO: Don't add file if no data
+  //   const { tempFilePath, fileName } = await convertToZipFile([
+  //     { fileName: TEMP_FOLDER + "/bankTxns.csv", fileData: bankCSV },
+  //     { fileName: TEMP_FOLDER + "/alipayTxns.csv", fileData: alipayCSV },
+  //     { fileName: TEMP_FOLDER + "/wechatTxns.csv", fileData: wechatCSV },
+  //   ]);
 
-  const [bankCSV, alipayCSV, wechatCSV] = await Promise.all([
-    convertJSONtoCSV(bankData),
-    convertJSONtoCSV(alipayData),
-    convertJSONtoCSV(wechatData),
-  ]);
+  //   // return ZIP file
+  //   // res.attachment();
+  //   // res.download(tempFilePath, fileName);
+  //   res.status(204).send();
 
-  // TODO: Don't add file if no data
-  const { tempFilePath, fileName } = await convertToZipFile([
-    { fileName: TEMP_FOLDER + "/bankTxns.csv", fileData: bankCSV },
-    { fileName: TEMP_FOLDER + "/alipayTxns.csv", fileData: alipayCSV },
-    { fileName: TEMP_FOLDER + "/wechatTxns.csv", fileData: wechatCSV },
-  ]);
-
-  // return ZIP file
-  // res.attachment();
-  // res.download(tempFilePath, fileName);
-  res.status(204).send();
-
-  console.log("Sent!");
+  //   console.log("Sent!");
 };
 
 module.exports = {

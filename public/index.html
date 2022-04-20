@@ -1,49 +1,170 @@
 <html>
   <head>
-    <title>China Personal Financial Management Tool</title>
+    <title>China Bank Transaction Cleaning Tool</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/index.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <h1>China Personal Financial Management Tool</h1>
-    <p>
-      Upload your WeChat Pay, Alipay and Chinese bank transactions here to clean
-      and merge them
-    </p>
-    <form method="post" enctype="multipart/form-data" action="/upload">
-      <div>
-        <label for="bank_upload">Upload bank transactions</label>
-        <input
-          type="file"
-          id="bankUpload"
-          accept=".csv,.xlsx"
-          name="bankUpload"
-        />
+    <h1>China Bank Transaction Cleaning Tool</h1>
+    <section class="hero">
+      <div class="text">
+        <h1>Automatically clean your Chinese transaction downloads</h1>
+        <p>
+          Upload your WeChat Pay, Alipay and Chinese bank transactions here to
+          clean and merge them
+        </p>
+        <a href="#use_app">
+          <button class="cta">Test it out yourself</button>
+        </a>
       </div>
       <div>
-        <label for="alipay_upload">Upload Alipay transactions</label>
-        <input
-          type="file"
-          id="alipayUpload"
-          accept=".csv,.xlsx"
-          name="alipayUpload"
-        />
+        <img src="assets/img/landing/hero/hero_image.png" />
       </div>
+    </section>
+    <section class="steps">
+      <h2 id="use_app">Try it for free</h2>
       <div>
-        <label for="wechat_upload">Upload WeChat transactions</label>
-        <input
-          type="file"
-          id="wechatUpload"
-          accept=".csv,.xlsx"
-          name="wechatUpload"
-        />
+        <div id="step_1">
+          <h3>Step 1: Download your raw transactions</h3>
+          <a
+            href="https://youngchingjui.notion.site/Downloading-Transactions-in-China-185f49c2b39d427e9c82e10041e281a9"
+            target="blank"
+          >
+            <p>How do I download my raw transactions?</p>
+          </a>
+        </div>
+        <div id="step_2">
+          <h3>
+            Step 2: Submit your raw transactions and download cleaned
+            transactions
+          </h3>
+          <form method="post" enctype="multipart/form-data" action="/upload">
+            <label for="bank">Select your bank:</label>
+            <select name="bank">
+              <option value="wechat">WeChat</option>
+              <option value="alipay">Alipay</option>
+              <option value="ccb">CCB</option>
+            </select>
+            <div>
+              <label for="fileUpload"
+                >Select your transaction .csv to be uploaded and cleaned</label
+              >
+              <input
+                type="file"
+                id="fileUpload"
+                accept=".csv,.xlsx"
+                name="fileUpload"
+              />
+            </div>
+            <button type="submit" class="action">
+              Upload, clean and download new transactions
+            </button>
+          </form>
+          <div>
+            Note: Opening downloaded CSVs with Excel may show up with garbled
+            icons. The CSVs are encoded with UTF-8, but MS Excel treats them as
+            ANSI. To overcome this, open the CSV file with another text editor
+            (ie. Notepad, TextEdit, VS Code). If you upload this file to
+            LunchMoney, it should work as intended.
+          </div>
+        </div>
       </div>
-      <button type="submit">Submit bank txns</button>
-    </form>
-    <form method="post" enctype="multipart/form-data" action="/test">
+    </section>
+    <section class="benefits">
+      <h2>Benefits</h2>
       <div>
-        <label for="test">Test</label>
-        <input type="file" id="test" accept=".csv,.xlsx" name="test" />
+        <div>
+          <img src="assets/img/landing/benefits/combine.png" />
+          <p>
+            Track your spending better by combining transactions from Chinese
+            wallets
+          </p>
+        </div>
+        <div>
+          <img src="assets/img/landing/benefits/lunch_money_mascot.png" />
+          <p>Formatted for uploads to Lunch Money</p>
+        </div>
+        <div>
+          <img src="assets/img/landing/benefits/decode.png" />
+          <p>Automatically decodes to UTF-8</p>
+        </div>
+        <div>
+          <img src="assets/img/landing/benefits/conversion.png" />
+          <p>Converts data to useable formats</p>
+        </div>
       </div>
-      <button type="submit">Test</button>
-    </form>
+    </section>
+    <section class="how_to">
+      <h2>How do I download my transactions?</h2>
+      <p>
+        Click on your bank for a full guide on downloading your transactions
+      </p>
+      <div>
+        <div>
+          <a
+            target="_blank"
+            href="https://youngchingjui.notion.site/Alipay-a7938dc2a62d43bca2c87dedde8e4dcb"
+          >
+            <img src="assets/img/landing/howto/alipay_logo.jpeg" />
+            <p>Alipay</p></a
+          >
+        </div>
+        <div>
+          <a
+            target="_blank"
+            href="https://youngchingjui.notion.site/WeChat-Pay-b278ea5440e6400c94dc03bd69e7d1c0"
+          >
+            <img src="assets/img/landing/howto/wechat_logo.png" />
+            <p>WeChat Pay</p></a
+          >
+        </div>
+        <div>
+          <a
+            target="_blank"
+            href="https://youngchingjui.notion.site/China-Construction-Bank-4d12c159fa174cfca3e33a87e782b2d7"
+          >
+            <img src="assets/img/landing/howto/ccb_logo.png" />
+            <p>China Construction Bank</p></a
+          >
+        </div>
+      </div>
+    </section>
+    <section class="parse">
+      <h2>Full Parsing Steps</h2>
+      <p>
+        Click the links below to see how exactly we’re parsing your transactions
+        for each bank
+      </p>
+      <a
+        target="_blank"
+        href="https://youngchingjui.notion.site/Alipay-54a193bceaea40499b78fbaeccaad988"
+        ><p>Alipay</p></a
+      >
+      <a
+        target="_blank"
+        href="https://youngchingjui.notion.site/WeChat-14d332dad3f047358b3eb2236a19e026"
+        ><p>WeChat</p></a
+      >
+      <a
+        target="_blank"
+        href="https://youngchingjui.notion.site/China-Construction-Bank-CCB-9426ef6f391d4926bed689c798e08555"
+        ><p>CCB</p></a
+      >
+    </section>
+    <section class="contact">
+      <h2>Contact Me</h2>
+      <p>
+        Want to parse your raw data differently?
+        <a
+          target="_blank"
+          href="https://youngchingjui.notion.site/Contact-me-on-WeChat-be8157a958144d4497360798e04ce887"
+        >
+          Message me on WeChat
+        </a>
+        or <a href="mailto: young.chingjui@youngandai.com"> email me </a>
+        on how you'd like to update this program for your own use.
+      </p>
+    </section>
   </body>
 </html>

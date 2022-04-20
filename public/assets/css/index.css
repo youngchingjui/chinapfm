@@ -1,0 +1,20 @@
+body {max-width: 1200px; margin: auto}
+
+h2 {margin-bottom: 10px;}
+
+section {margin: 40px auto;}
+
+section.hero {display: flex;}
+section.hero img {max-width: 550px;}
+section.hero .text {display: flex; flex-direction: column; justify-content: center;}
+section.hero .text button {max-width: 200px;}
+
+section.steps div {display: flex}
+section.steps div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px}
+
+section.benefits div {display: flex;}
+section.benefits div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; align-items: center;}
+section.benefits img {max-width: 200px;}
+
+section.how_to div {display: flex;}
+section.how_to div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; align-items: center;}
