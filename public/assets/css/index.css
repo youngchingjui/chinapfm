@@ -1,5 +1,17 @@
-body {max-width: 1200px; margin: auto}
+@font-face {
+    font-family: "SF UI Text";
+    src: url(fonts/sfuitext-regular-webfont.woff2) format("woff2");
+     font-weight: normal;
+    font-style: normal;;
+  }
 
+body {font-family: 'SF UI Text', sans-serif;}
+
+.centeredMaxWidthContainer {max-width: 1024px; margin:auto;}
+.logo {font-size: 24px; color: inherit}
+.flex{ display: flex;}
+
+.navbar {background-color: #48BF84; color: white; height: 60px}
 h2 {margin-bottom: 10px;}
 
 section {margin: 40px auto;}
