@@ -1,32 +1,63 @@
 @font-face {
-    font-family: "SF UI Text";
+    font-family: "SF UI Text Regular";
     src: url(fonts/sfuitext-regular-webfont.woff2) format("woff2");
      font-weight: normal;
     font-style: normal;;
-  }
+}
 
-body {font-family: 'SF UI Text', sans-serif;}
+@font-face {
+  font-family: "SF UI Text Bold";
+  src: url(fonts/sfuitext-bold-webfont.woff2) format("woff2");
+    font-weight: bold;
+  font-style: normal;;
+}
 
-.centeredMaxWidthContainer {max-width: 1024px; margin:auto;}
-.logo {font-size: 24px; color: inherit}
-.flex{ display: flex;}
+/* Bootstrap overrides */
+.btn-primary {background-color: #48BF84; border-color: inherit;}
+.btn-primary:hover {background-color: #48BF84; border-color: inherit;}
 
 .navbar {background-color: #48BF84; color: white; height: 60px}
-h2 {margin-bottom: 10px;}
 
-section {margin: 40px auto;}
 
-section.hero {display: flex;}
+/* Custom CSS */
+body {font-family: 'SF UI Text Regular', sans-serif;}
+
+h2 {margin-bottom: 10px; font-family: 'SF UI Text Bold'; size: 40px;}
+h4 {margin: 30px auto 10px}
+
+a {text-decoration: none; color: inherit}
+a:hover {color: #48BF84}
+
+
+/* Section CSS */
+nav a:hover {color: white}
+
+section {padding: 50px 0; min-height: 400px;}
+
+section.hero {background-color: rgba(72, 191, 132, 0.1);}
 section.hero img {max-width: 550px;}
 section.hero .text {display: flex; flex-direction: column; justify-content: center;}
 section.hero .text button {max-width: 200px;}
+section.hero .card {border-color: #48BF84; }
+section.hero .card .card-header {background-color: #48BF84; color: white}
 
-section.steps div {display: flex; flex-wrap: wrap;}
-section.steps div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; min-width: 400px;}
+section.solution {background-color: #48BF84; color: white;}
+section.solution li {font-size: 26px; margin: 50px auto 30px;}
+
+section.how_to img {height: 150px;}
+section.how_to .card {min-height: 260px; height:100%; padding-top: 1rem; border: 0}
+section.how_to .card p {font-size: 26px; width: 170px; text-align: center; margin-bottom: 0px;}
+
+section.parse {background-color: hsla(150, 48%, 52%, 0.1);}
+section.parse img {height: 150px;}
+section.parse .card {min-height: 260px; height:100%; padding-top: 1rem; border: 0; background: none;}
+section.parse .card p {font-size: 26px; width: 170px; text-align: center; margin-bottom: 0px;}
 
 section.benefits div {display: flex;}
 section.benefits div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; align-items: center; }
 section.benefits img {max-width: 200px;}
 
-section.how_to div {display: flex;}
-section.how_to div div {flex-direction: column; flex-basis: 0; flex: 1 1 0px; align-items: center;}
+.logo {font-size: 24px; color: inherit}
+.subheader {font-size: 26px; line-height: 1.2;}
+
+.footer {background-color: #48BF84; color: white; min-height: 120px; font-size: 24px; padding-top: 50px}
