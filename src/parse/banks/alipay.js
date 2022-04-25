@@ -12,6 +12,15 @@ const parseAlipayTxns = async (alipayUpload) => {
   const converterStream = iconv.decodeStream("GB18030");
 
   return await new Promise((resolve, reject) => {
+    // Reject if any transforms have errors
+    csvParsers.alipay.on("error", (err) => {
+      reject(err);
+    });
+
+    transforms.alipay.on("error", (err) => {
+      reject(err);
+    });
+
     const result = [];
     fs.createReadStream(alipayUpload.tempFilePath)
       .pipe(converterStream)

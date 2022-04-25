@@ -18,6 +18,18 @@ const alipay = csvParser({
   mapValues: ({ value }) => value.replace(/\s+$/, ""),
 });
 
+alipay.on("headers", (headers) => {
+  // Check if all required headers are included
+  const missingHeaders = Object.values(headerMappings.alipay).filter((e) => {
+    if (!headers.includes(e)) {
+      return e;
+    }
+  });
+
+  if (missingHeaders.length > 0)
+    alipay.destroy(Error(`Missing some headers: ${missingHeaders}`));
+});
+
 const wechat = csvParser({
   skipLines: 16,
   mapHeaders: ({ header }) => {
@@ -26,6 +38,18 @@ const wechat = csvParser({
     }
     return header;
   },
+});
+
+wechat.on("headers", (headers) => {
+  // Check if all required headers are included
+  const missingHeaders = Object.values(headerMappings.wechat).filter((e) => {
+    if (!headers.includes(e)) {
+      return e;
+    }
+  });
+
+  if (missingHeaders.length > 0)
+    wechat.destroy(Error(`Missing some headers: ${missingHeaders}`));
 });
 
 const csvParsers = { alipay, wechat };

@@ -47,8 +47,12 @@ wechat._transform = (chunk, encoding, callback) => {
     newNotes = chunk["交易类型"];
   }
 
-  wechat.push({ ...chunk, date: newDate, amount: newAmount, notes: newNotes });
-  callback();
+  callback(null, {
+    ...chunk,
+    date: newDate,
+    amount: newAmount,
+    notes: newNotes,
+  });
 };
 
 const transforms = { alipay, wechat };

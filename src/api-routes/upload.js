@@ -14,6 +14,14 @@ const merge = require("../parse/merge");
 
 const upload = async (req, res) => {
   const { files, body } = req;
+
+  // Check if `files` exists
+  if (!files) {
+    errorMsg = "Didn't receive a file";
+    console.error(errorMsg);
+    res.status(400).send(errorMsg);
+  }
+
   const { fileUpload } = files;
   const { bank } = body;
 
@@ -34,6 +42,8 @@ const upload = async (req, res) => {
         break;
       } catch (err) {
         console.error(err);
+        res.status(400).send(err.message);
+        break;
       }
 
     case "alipay":
@@ -52,6 +62,8 @@ const upload = async (req, res) => {
         break;
       } catch (err) {
         console.error(err);
+        res.status(400).send(err.message);
+        break;
       }
 
     case "wechat":
@@ -70,6 +82,8 @@ const upload = async (req, res) => {
         break;
       } catch (err) {
         console.error(err);
+        res.status(400).send(err.message);
+        break;
       }
 
     default:

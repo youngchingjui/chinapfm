@@ -8,8 +8,17 @@ const parseWechatTxns = async (wechat_upload) => {
   // Returns cleaned data in JSON format
   console.log("parseWechatTxns");
 
-  const result = [];
   return await new Promise((resolve, reject) => {
+    // Reject if any transforms have errors
+    csvParsers.wechat.on("error", (err) => {
+      reject(err);
+    });
+
+    transforms.wechat.on("error", (err) => {
+      reject(err);
+    });
+
+    const result = [];
     fs.createReadStream(wechat_upload.tempFilePath)
       .pipe(csvParsers.wechat)
       .pipe(transforms.wechat)
