@@ -93,7 +93,6 @@ const parseWechatTxns = async (wechat_upload) => {
     // Pipe all the streams together, and return results
     pipeline(readStream, csvParserTransform, wechatTransform, (err) => {
       if (err) {
-        console.error(`pipeline error: ${err}`);
         reject(Error(err));
       }
       resolve(result);
