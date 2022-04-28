@@ -8,20 +8,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <nav class="navbar">
+    <nav class="navbar navbar-expand-lg fixed-top">
       <div class="container">
         <a class="navbar-brand logo" href="#">Chinese Transaction Parser</a>
-        <div class="right col-md-auto row">
-          <a href="#how_to" class="col-md-auto">How to download transactions</a>
-          <a href="#parse" class="col-md-auto">Parsing steps</a>
-          <a href="#contact" class="col-md-auto">Contact</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarSupportedContent"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="#how_to" class="nav-link col-md-auto"
+                >How to download transactions</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="#parse" class="nav-link col-md-auto">Parsing steps</a>
+            </li>
+            <li class="nav-item">
+              <a href="#contact" class="nav-link col-md-auto">Contact</a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
     <section class="hero">
       <div class="container">
         <div class="row">
-          <div class="col">
+          <div class="col-md">
             <h1>Parse Chinese bank transactions</h1>
             <p class="subheader">
               Automatically parse your Wechat Pay, Alipay, or Chinese bank
@@ -70,7 +91,7 @@
               </div>
             </div>
           </div>
-          <div class="col">
+          <div class="col-md">
             <img
               class="img-fluid"
               src="assets/img/landing/hero/hero_image.png"
@@ -92,7 +113,7 @@
     <section class="solution">
       <div class="container">
         <div class="row">
-          <div class="col">
+          <div class="col-sm">
             <h2>The Solution</h2>
             <p class="subheader">
               Our tool automatically cleans the transaction history so you can:
@@ -108,7 +129,7 @@
               <li>Keep a clean history of your transactions</li>
             </ul>
           </div>
-          <div class="col">
+          <div class="col-sm">
             <img
               class="img-fluid"
               src="assets/img/landing/solution/solution.png"
@@ -127,7 +148,7 @@
         <div class="row justify-content-center">
           <a
             target="_blank"
-            class="col-3"
+            class="col-sm"
             href="https://youngchingjui.notion.site/Alipay-a7938dc2a62d43bca2c87dedde8e4dcb"
           >
             <div class="card align-items-center">
@@ -139,7 +160,7 @@
           </a>
           <a
             target="_blank"
-            class="col-3"
+            class="col-sm"
             href="https://youngchingjui.notion.site/WeChat-Pay-b278ea5440e6400c94dc03bd69e7d1c0"
           >
             <div class="card align-items-center">
@@ -151,7 +172,7 @@
           </a>
           <a
             target="_blank"
-            class="col-3"
+            class="col-sm"
             href="https://youngchingjui.notion.site/China-Construction-Bank-4d12c159fa174cfca3e33a87e782b2d7"
           >
             <div class="card align-items-center">
@@ -173,7 +194,7 @@
         <div class="row justify-content-center">
           <a
             target="_blank"
-            class="col-3"
+            class="col-sm"
             href="https://youngchingjui.notion.site/Alipay-54a193bceaea40499b78fbaeccaad988"
           >
             <div class="card align-items-center">
@@ -185,7 +206,7 @@
           </a>
           <a
             target="_blank"
-            class="col-3"
+            class="col-sm"
             href="https://youngchingjui.notion.site/WeChat-14d332dad3f047358b3eb2236a19e026"
           >
             <div class="card align-items-center">
@@ -197,7 +218,7 @@
           </a>
           <a
             target="_blank"
-            class="col-3"
+            class="col-sm"
             href="https://youngchingjui.notion.site/China-Construction-Bank-CCB-9426ef6f391d4926bed689c798e08555"
           >
             <div class="card align-items-center">
@@ -235,5 +256,11 @@
         </div>
       </div>
     </div>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script> -->
   </body>
 </html>

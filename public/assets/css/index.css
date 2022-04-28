@@ -17,7 +17,10 @@
 .btn-primary:hover {background-color: #48BF84; border-color: inherit;}
 
 .navbar {background-color: #48BF84; color: white; height: 60px}
-
+.nav-link {color: white; }
+.nav-link:hover {color: white; border-color: inherit;}
+.navbar-collapse {background-color: #48BF84; margin: 0 -12px; padding: 0 12px}
+.navbar-toggler-icon {background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");}
 
 /* Custom CSS */
 body {font-family: 'SF UI Text Regular', sans-serif;}
@@ -34,8 +37,7 @@ nav a:hover {color: white}
 
 section {padding: 50px 0; min-height: 400px;}
 
-section.hero {background-color: rgba(72, 191, 132, 0.1);}
-section.hero img {max-width: 550px;}
+section.hero {background-color: rgba(72, 191, 132, 0.1); margin-top: 60px;}
 section.hero .text {display: flex; flex-direction: column; justify-content: center;}
 section.hero .text button {max-width: 200px;}
 section.hero .card {border-color: #48BF84; }
