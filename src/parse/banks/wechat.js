@@ -16,12 +16,6 @@ const csvParserOptions = {
 const weChatTransformFunction = (chunk, encoding, callback) => {
   const { date, amount, notes } = chunk;
 
-  // Convert date to Date object
-  const [dateString, timeString] = date.split(" ");
-  const [day, month, year] = dateString.split("-");
-  const [hour, seconds] = timeString.split(":");
-  const newDate = new Date(2000 + Number(year), month - 1, day, hour, seconds);
-
   // Remove "¥" from `amount` and convert to Number object
   var newAmount = Number(amount.replace("¥", ""));
 
@@ -38,7 +32,7 @@ const weChatTransformFunction = (chunk, encoding, callback) => {
 
   callback(null, {
     ...chunk,
-    date: newDate,
+    date: new Date(date),
     amount: newAmount,
     notes: newNotes,
   });
