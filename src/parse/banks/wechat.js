@@ -1,7 +1,12 @@
 const fs = require("fs");
 const csvParser = require("csv-parser");
 const { Transform, pipeline } = require("stream");
+const dayjs = require("dayjs");
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+
 const { headerMappings } = require("../../mappings/header");
+
+dayjs.extend(customParseFormat);
 
 const csvParserOptions = {
   skipLines: 16,
@@ -15,6 +20,21 @@ const csvParserOptions = {
 
 const weChatTransformFunction = (chunk, encoding, callback) => {
   const { date, amount, notes } = chunk;
+
+  // Date can come in format `yyyy-mm-dd hh:mm:ss` or `d-m-yy hh:mm`
+  var newDate;
+  if (dayjs(date, "YYYY-MM-DD HH:mm:ss", true).isValid()) {
+    newDate = new Date(date);
+  } else if (dayjs(date, "D-M-YY HH:mm", true).isValid()) {
+    const [dateString, timeString] = date.split(" ");
+    const [day, month, year] = dateString.split("-");
+    const [hour, minutes] = timeString.split(":");
+    newDate = new Date(2000 + Number(year), month - 1, day, hour, minutes);
+  } else {
+    // TODO: Identify any other date format not caught here
+    console.warn(`Did not catch date format for date: ${date}`);
+    newDate = date;
+  }
 
   // Remove "¥" from `amount` and convert to Number object
   var newAmount = Number(amount.replace("¥", ""));
@@ -32,7 +52,7 @@ const weChatTransformFunction = (chunk, encoding, callback) => {
 
   callback(null, {
     ...chunk,
-    date: new Date(date),
+    date: newDate,
     amount: newAmount,
     notes: newNotes,
   });
