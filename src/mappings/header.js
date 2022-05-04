@@ -18,6 +18,13 @@ const headerMappings = {
     商品: "notes",
     "金额(元)": "amount",
   },
+  icbc: {
+    交易日期: "date",
+    对方户名: "payee",
+    交易场所: "notes",
+    "记账金额(收入)": "inflow",
+    "记账金额(支出)": "outflow",
+  },
 };
 
 module.exports = { headerMappings };
