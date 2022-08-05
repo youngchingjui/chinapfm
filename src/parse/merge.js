@@ -31,7 +31,13 @@ const alipay = (alipayData, bankData) => {
       const aRow = matches[0];
 
       // Replace bRow `payee` and `notes` from aRow
-      return { ...bRow, payee: aRow.payee, notes: aRow.notes, isAlipay: true };
+      return {
+        ...bRow,
+        payee: aRow.payee,
+        notes: aRow.notes,
+        isAlipay: true,
+        is_connected: true,
+      };
     } else {
       const aRow = matches[0];
 
@@ -80,7 +86,12 @@ const wechat = (wechatData, bankData) => {
     } else if (matches.length == 1) {
       // Perfect match. Replace `payee` and `notes` from wechat data
       const wRow = matches[0];
-      return { ...bRow, payee: wRow.payee, notes: wRow.notes };
+      return {
+        ...bRow,
+        payee: wRow.payee,
+        notes: wRow.notes,
+        is_connected: true,
+      };
     } else {
       // There are 2+ matches
       console.warn(

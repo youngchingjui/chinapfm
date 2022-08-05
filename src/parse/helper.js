@@ -93,7 +93,9 @@ const convertToTempFile = async (data, filePath) => {
 const convertJSONtoCSV = (data) => {
   // parse JSON back to CSV
   console.log("convertJSONtoCSV");
-  return parseAsync(data, { fields: HEADER_FIELDS });
+  return parseAsync(data, {
+    fields: ["date", "payee", "amount", "notes", "tag", "is_connected"],
+  });
 };
 
 const saveToFile = (dataCSV, filePath) => {

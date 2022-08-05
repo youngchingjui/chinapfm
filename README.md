@@ -4,16 +4,14 @@ I will build a simple website that aggregates your WeChat Pay, Alipay and your C
 
 ## Infrastructure
 
-This application is built on a NodeJS server, deployed on an EC2 instance on AWS.
+This application is built on a NodeJS server, deployed on an EC2 instance on AWS in ap-northeast-2 (Seoul).
 The server has nginx directing the requests
 The front-end and backend will both be deployed through this repository.
 
 ## Next steps
 
-- Setup simple front-end webpage to upload transactions CSVs and merge across platforms
 - Develop backend logic for wrangling raw CSV transaction downloads
 - Clean uploaded CSVs for upload into #LunchMoney.app
-- Won’t buy domain name just yet - will use out-of-box AWS domain
 
 ## Parsing Logic
 

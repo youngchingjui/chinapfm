@@ -3,6 +3,7 @@ const express = require("express");
 const fileUpload = require("express-fileupload");
 const { upload } = require("./api-routes/upload");
 const test = require("./api-routes/test");
+const { merge } = require("./api-routes/merge");
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.get("", (req, res) => {
 });
 
 app.post("/upload", upload);
+
+app.post("/merge", merge);
 
 app.post("/test", test);
 

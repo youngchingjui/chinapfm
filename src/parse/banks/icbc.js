@@ -2,6 +2,10 @@ const fs = require("fs");
 const csvParser = require("csv-parser");
 const { pipeline, Transform } = require("stream");
 const { headerMappings } = require("../../mappings/header");
+const dayjs = require("dayjs");
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+
+dayjs.extend(customParseFormat);
 
 const csvParserOptions = {
   skipLines: 6,
@@ -25,13 +29,16 @@ const icbcTransformFunction = (chunk, encoding, callback) => {
 
   var newNotes = notes;
   var newPayee = payee;
-  var newTag;
+  var newTag, newDate;
 
   // Remove empty rows (checks if `余额` is empty)
   if (!余额) {
     callback();
     return;
   }
+
+  // set date as Date object
+  newDate = dayjs(date, "YYYY-MM-DD").toDate();
 
   // If `摘要` == "他行汇入", copy `摘要` into `notes`
   if (摘要 == "他行汇入") {
@@ -76,6 +83,7 @@ const icbcTransformFunction = (chunk, encoding, callback) => {
     payee: newPayee,
     tag: newTag,
     amount: newAmount,
+    date: newDate,
   });
 };
 

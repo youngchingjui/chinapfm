@@ -35,6 +35,8 @@ const alipayTransformFunction = (chunk, encoding, callback) => {
   // Convert `date` to actual date
   const newDate = new Date(date);
 
+  // TODO: Remove rows where `资金状态` is blank
+
   // Remove rows without data in `date`
   if (date) {
     callback(null, { ...chunk, date: newDate, amount: newAmount });
