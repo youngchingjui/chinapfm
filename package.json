@@ -24,5 +24,8 @@
     "iconv-lite": "^0.6.3",
     "json2csv": "^5.0.7",
     "jszip": "^3.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
