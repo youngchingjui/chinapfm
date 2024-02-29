@@ -1,3 +1,11 @@
-export default function Page() {
-  return <h1>Hello chinapfm</h1>;
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }
