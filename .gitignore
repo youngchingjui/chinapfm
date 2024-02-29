@@ -4,3 +4,4 @@ package-lock.json
 /server
 bank_txns.csv
 /temp
+.next
